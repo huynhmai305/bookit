@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import Room from "../models/room";
 import ErrorHandler from "../utils/errorHandler";
 import catchAsyncErrors from "../middlewares/catchAsyncErrors";
-import APIFeatures from "../utils/APIFeatures";
+import APIFeatures from "../utils/apiFeatures";
 
 // => GET /api/rooms
 const allRooms = catchAsyncErrors(

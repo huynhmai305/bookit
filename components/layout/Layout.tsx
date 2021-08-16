@@ -2,6 +2,8 @@ import Head from "next/head";
 import React, { ReactNode } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface LayoutProps {
   children: ReactNode;
@@ -22,6 +24,7 @@ const Layout: React.FC<LayoutProps> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />
+      <ToastContainer position="bottom-right" />
       {children}
       <Footer />
     </div>
