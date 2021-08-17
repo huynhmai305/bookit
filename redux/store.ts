@@ -29,5 +29,7 @@ const initStore = () => {
   return createStore(rootReducer, bindMiddleware([thunkMiddleware]));
 };
 
-export const wrapper = createWrapper(initStore, { debug: true });
+export const wrapper = createWrapper(initStore, {
+  debug: process.env.NODE_ENV === "development",
+});
 export type RootState = ReturnType<typeof rootReducer>;

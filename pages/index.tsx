@@ -16,6 +16,17 @@ const Index: React.FC = () => {
 export default Index;
 
 export const getServerSideProps: GetServerSideProps =
-  wrapper.getServerSideProps((store) => async ({ req }) => {
-    await store.dispatch(getRooms(req));
-  });
+  wrapper.getServerSideProps(
+    (store) =>
+      async ({ req, query }): Promise<any> => {
+        await store.dispatch(
+          getRooms(
+            req,
+            query.page,
+            query.location,
+            query.guests,
+            query.category
+          )
+        );
+      }
+  );

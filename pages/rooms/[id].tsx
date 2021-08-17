@@ -16,6 +16,9 @@ const RoomDetailsPage: React.FC = () => {
 export default RoomDetailsPage;
 
 export const getServerSideProps: GetServerSideProps =
-  wrapper.getServerSideProps((store) => async ({ req, params }) => {
-    await store.dispatch(getRoomDetails(req, params?.id));
-  });
+  wrapper.getServerSideProps(
+    (store) =>
+      async ({ req, params }): Promise<any> => {
+        await store.dispatch(getRoomDetails(req, params?.id));
+      }
+  );
