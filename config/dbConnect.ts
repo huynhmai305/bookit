@@ -5,7 +5,7 @@ const dbConnect = () => {
     return;
   }
 
-  mongoose.connect(process.env.DB_LOCAL_URI!, {
+  mongoose.connect(process.env.NEXT_PUBLIC_DB_LOCAL_URI!, {
     // "!" de fix loi error typescript env
     useNewUrlParser: true,
     useUnifiedTopology: true,

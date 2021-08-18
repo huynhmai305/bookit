@@ -1,3 +1,4 @@
+import { AnyAction } from "redux";
 import {
   ALL_ROOMS_FAIL,
   ALL_ROOMS_SUCCESS,
@@ -7,21 +8,21 @@ import {
 } from "./../constants/roomConstants";
 
 export interface Room {
-  name?: String;
-  pricePerNight?: Number;
-  description?: String;
-  address?: String;
-  guestCapacity?: Number;
-  numOfBeds?: Number;
-  internet?: Boolean;
-  breakfast?: Boolean;
-  airConditioned?: Boolean;
-  petsAllowed?: Boolean;
-  roomCleaning?: Boolean;
-  ratings?: Number;
-  numOfReviews?: Number;
-  images?: Array<{ public_id: String; url: String }>;
-  category?: String;
+  name?: string;
+  pricePerNight?: number;
+  description?: string;
+  address?: string;
+  guestCapacity?: number;
+  numOfBeds?: number;
+  internet?: boolean;
+  breakfast?: boolean;
+  airConditioned?: boolean;
+  petsAllowed?: boolean;
+  roomCleaning?: boolean;
+  ratings?: number;
+  numOfReviews?: number;
+  images?: Array<{ public_id: string; url: string }>;
+  category?: string;
   reviews?: Array<any>;
 }
 
@@ -36,7 +37,10 @@ const initRooms: Rooms = {
 };
 
 // All rooms reducer
-export const allRoomsReducer = (state: Rooms = initRooms, action: any) => {
+export const allRoomsReducer = (
+  state: Rooms = initRooms,
+  action: AnyAction
+) => {
   switch (action.type) {
     case ALL_ROOMS_SUCCESS:
       return {

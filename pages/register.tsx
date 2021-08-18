@@ -1,10 +1,15 @@
 import React from "react";
-import RegisterComponent from "../components/Register";
+import RegisterComponent from "../components/auth/Register";
+import Layout from "../components/layout/Layout";
 
 interface RegisterProps {}
 
 const Register: React.FC<RegisterProps> = () => {
-  return <RegisterComponent />;
+  return (
+    <Layout title="Register">
+      <RegisterComponent />
+    </Layout>
+  );
 };
 
 export default Register;

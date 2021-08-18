@@ -18,7 +18,7 @@ const RoomDetails: React.FC = () => {
       toast.error(error);
       dispatch(clearErrors);
     }
-  }, [error]);
+  }, [dispatch, error]);
 
   return (
     <>

@@ -1,10 +1,13 @@
 import React from "react";
-import LoginComponent from "../components/Login";
+import LoginComponent from "../components/auth/Login";
+import Layout from "../components/layout/Layout";
 
-interface LoginProps {}
-
-const Login: React.FC<LoginProps> = () => {
-  return <LoginComponent />;
+const Login: React.FC = () => {
+  return (
+    <Layout title="Login">
+      <LoginComponent />
+    </Layout>
+  );
 };
 
 export default Login;

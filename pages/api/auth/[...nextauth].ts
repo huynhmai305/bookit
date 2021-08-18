@@ -40,8 +40,8 @@ export default NextAuth({
       user && (token.user = user);
       return Promise.resolve(token);
     },
-    session: async (session, user) => {
-      session.user = user;
+    session: async (session, user: any) => {
+      session.user = user.user;
       return Promise.resolve(session);
     },
   },
