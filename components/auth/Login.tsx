@@ -26,8 +26,6 @@ const LoginComponent: React.FC<LoginComponentProps> = () => {
 
     setLoading(false);
 
-    console.log(result, 123);
-
     if (result?.error) {
       toast.error(result.error);
     } else {
@@ -68,9 +66,9 @@ const LoginComponent: React.FC<LoginComponentProps> = () => {
               />
             </div>
 
-            <a href="#" className="float-right mb-4">
-              Forgot Password?
-            </a>
+            <Link href="/password/forgot">
+              <a className="float-right mb-4">Forgot Password?</a>
+            </Link>
 
             <button
               id="login_button"
