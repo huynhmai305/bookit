@@ -24,6 +24,7 @@ class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
+          <noscript>You need to enable JavaScript to run this app.</noscript>
           <script
             defer
             src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

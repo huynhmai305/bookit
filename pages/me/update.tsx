@@ -1,5 +1,4 @@
 import { getSession } from "next-auth/client";
-import { Context } from "next-redux-wrapper";
 import React from "react";
 import Layout from "../../components/layout/Layout";
 import Profile from "../../components/user/Profile";

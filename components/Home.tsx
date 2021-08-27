@@ -29,7 +29,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     if (error) {
       toast.error(error);
-      dispatch(clearErrors);
+      dispatch(clearErrors());
     }
   }, [dispatch, error]);
 

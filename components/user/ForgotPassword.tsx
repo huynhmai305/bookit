@@ -26,7 +26,7 @@ const ForgotPasswordComponent: React.FC<ForgotPasswordComponentProps> = () => {
   useEffect(() => {
     if (error) {
       toast.error(error);
-      dispatch(clearErrors);
+      dispatch(clearErrors());
     }
 
     if (message) {
