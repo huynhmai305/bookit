@@ -58,16 +58,19 @@ const RoomDetails: React.FC = () => {
     }
   };
 
-  const newBookingHandler = async () => {
+  const newBookingHandler = async (
+    paymentId: string,
+    paymentStatus: string
+  ) => {
     const bookingDate = {
       room: router.query.id,
       checkInDate,
       checkOutDate,
       daysOfStay,
-      amountPaid: 90,
+      amountPaid: room.pricePerNight * daysOfStay,
       paymentInfo: {
-        id: "STRIPE_PAYMENT_ID",
-        status: "STRIPE_PAYMENT_STATUS",
+        id: paymentId,
+        status: paymentStatus,
       },
     };
 
@@ -78,29 +81,31 @@ const RoomDetails: React.FC = () => {
         },
       };
       const { data } = await axios.post("/api/bookings", bookingDate, config);
-      console.log(data);
+      if (data.success) {
+        await router.push("/bookings/me");
+      }
     } catch (error) {
       console.log(error.response);
     }
   };
 
-  // const addPaypalScript = () => {
-  //   if (window.paypal) {
-  //     setScriptLoaded(true);
-  //     return;
-  //   }
+  const addPaypalScript = () => {
+    if (window.paypal) {
+      setScriptLoaded(true);
+      return;
+    }
 
-  //   const script = document.createElement("script");
-  //   script.src = `https://www.paypal.com/sdk/js?client-id=AS94PfwZ6WUpxWRoH4zOqnrH-9f8buA4xeLtLu5azFI2xcYYjksZ6jjFVvRKvrDj4QdAG0ho76Kiyfda`;
-  //   script.type = "text/javascript";
-  //   script.async = true;
-  //   script.onload = () => setScriptLoaded(true);
-  //   document.body.appendChild(script);
-  // };
+    const script = document.createElement("script");
+    script.src = `https://www.paypal.com/sdk/js?client-id=AS94PfwZ6WUpxWRoH4zOqnrH-9f8buA4xeLtLu5azFI2xcYYjksZ6jjFVvRKvrDj4QdAG0ho76Kiyfda`;
+    script.type = "text/javascript";
+    script.async = true;
+    script.onload = () => setScriptLoaded(true);
+    document.body.appendChild(script);
+  };
 
-  // useEffect(() => {
-  //   addPaypalScript();
-  // }, []);
+  useEffect(() => {
+    addPaypalScript();
+  }, []);
 
   useEffect(() => {
     dispatch(getBookedDates(id));
@@ -187,21 +192,23 @@ const RoomDetails: React.FC = () => {
                   Login to book room.
                 </div>
               )}
-              {available && user && (
+              {/* {available && user && (
                 <button
                   className="btn btn-block py-3 booking-btn"
                   onClick={newBookingHandler}
                 >
                   Pay
                 </button>
-              )}
-              {/* {available && user && (
+              )} */}
+              {available && user && scriptLoaded && (
                 <PayPalButton
                   amount={room.pricePerNight * daysOfStay}
-                  onSuccess={(details: any, data: any) => console.log(details)}
+                  onSuccess={(details: any, data: any) => {
+                    newBookingHandler(details.id, details.status);
+                  }}
                   style={{ color: "blue" }}
                 />
-              )} */}
+              )}
             </div>
           </div>
         </div>

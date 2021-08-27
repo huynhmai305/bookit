@@ -77,8 +77,28 @@ const paypalCheckout = catchAsyncErrors(
         }
       }
     );
+  }
+);
+
+// generate paypal checkout session success =>  /api/checkout/:roomId/success
+const paypalCheckoutSuccess = catchAsyncErrors(
+  async (req: NextApiRequest, res: NextApiResponse, next: any) => {
+    const { paymentId, PayerID } = req.query;
+
+    const execute_payment_json = {
+      payer_id: `${PayerID}`,
+      transactions: [
+        {
+          amount: {
+            currency: "USD",
+            total: `25.00`,
+          },
+        },
+      ],
+    };
+
     paypal.payment.execute(
-      paymentId,
+      `${paymentId}`,
       execute_payment_json,
       (error: SDKError, payment: Payment) => {
         if (error) {
@@ -91,4 +111,4 @@ const paypalCheckout = catchAsyncErrors(
   }
 );
 
-export { paypalCheckout };
+export { paypalCheckout, paypalCheckoutSuccess };
