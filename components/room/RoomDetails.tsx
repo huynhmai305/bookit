@@ -17,6 +17,8 @@ import {
 } from "../../redux/actions/bookingActions";
 import { PayPalButton } from "react-paypal-button-v2";
 import ButtonLoader from "../layout/ButtonLoader";
+import NewReview from "../review/NewReview";
+import ListReviews from "../review/ListReviews";
 
 const RoomDetails: React.FC = () => {
   const { user } = useSelector((state: RootState) => state.loadedUser);
@@ -213,35 +215,15 @@ const RoomDetails: React.FC = () => {
           </div>
         </div>
 
-        <div className="reviews w-75">
-          <h3>Reviews:</h3>
-          <hr />
-          <div className="review-card my-3">
-            <div className="rating-outer">
-              <div
-                className="rating-inner"
-                style={{ width: `${(room.ratings / 5) * 100}%` }}
-              ></div>
-            </div>
-            <p className="review_user">by John</p>
-            <p className="review_comment">Good Quality</p>
+        <NewReview />
 
-            <hr />
-          </div>
-
-          <div className="review-card my-3">
-            <div className="rating-outer">
-              <div
-                className="rating-inner"
-                style={{ width: `${(room.ratings / 5) * 100}%` }}
-              ></div>
-            </div>
-            <p className="review_user">by John</p>
-            <p className="review_comment">Good Quality</p>
-
-            <hr />
-          </div>
-        </div>
+        {room.reviews && room.reviews.length > 0 ? (
+          <ListReviews reviews={room.reviews} />
+        ) : (
+          <p>
+            <b>No reviews on this room</b>
+          </p>
+        )}
       </div>
     </>
   );

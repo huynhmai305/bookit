@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import Room from "../models/room";
+import Booking from "../models/booking";
 import ErrorHandler from "../utils/errorHandler";
 import catchAsyncErrors from "../middlewares/catchAsyncErrors";
 import APIFeatures from "../utils/apiFeatures";
@@ -107,4 +108,71 @@ const deleteRoom = catchAsyncErrors(
   }
 );
 
-export { allRooms, addRoom, singleRoom, updateRoom, deleteRoom };
+// => POST /api/reviews
+const createRoomReview = catchAsyncErrors(
+  async (req: any, res: NextApiResponse, next: (arg: ErrorHandler) => any) => {
+    const { rating, comment, roomId } = req.body;
+
+    const review = {
+      user: req.user._id,
+      name: req.user.name,
+      rating: Number(rating),
+      comment,
+    };
+
+    const room = await Room.findById(roomId);
+
+    const isReviewed = room.reviews.find(
+      (r: any) => r.user.toString() === req.user._id.toString()
+    );
+
+    if (isReviewed) {
+      room.reviews.forEach((review: any) => {
+        if (review.user.toString() === req.user._id.toString()) {
+          review.comment = comment;
+          review.rating = rating;
+        }
+      });
+    } else {
+      room.reviews.push(review);
+      room.numOfReviews = room.reviews.length;
+    }
+
+    room.ratings =
+      room.reviews.reduce((total: any, item: any) => total + item.rating, 0) /
+      room.reviews.length;
+
+    await room.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+      success: true,
+    });
+  }
+);
+
+// => GET /api/reviews/check_review_availability
+const checkReviewAvailability = catchAsyncErrors(
+  async (req: any, res: NextApiResponse, next: (arg: ErrorHandler) => any) => {
+    const { roomId } = req.query;
+
+    const bookings = await Booking.find({ user: req.user._id, room: roomId });
+
+    let isReviewAvailability = false;
+    if (bookings.length > 0) isReviewAvailability = true;
+
+    res.status(200).json({
+      success: true,
+      isReviewAvailability,
+    });
+  }
+);
+
+export {
+  allRooms,
+  addRoom,
+  singleRoom,
+  updateRoom,
+  deleteRoom,
+  createRoomReview,
+  checkReviewAvailability,
+};
