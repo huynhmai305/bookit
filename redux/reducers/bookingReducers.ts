@@ -11,6 +11,13 @@ import {
   MY_BOOKINGS_FAIL,
   MY_BOOKINGS_SUCCESS,
   CLEAR_ERRORS,
+  ADMIN_BOOKINGS_REQUEST,
+  ADMIN_BOOKINGS_SUCCESS,
+  ADMIN_BOOKINGS_FAIL,
+  DELETE_BOOKING_FAIL,
+  DELETE_BOOKING_REQUEST,
+  DELETE_BOOKING_RESET,
+  DELETE_BOOKING_SUCCESS,
 } from "../constants/bookingConstants";
 
 export interface Booking {
@@ -93,18 +100,24 @@ export const bookedDatesReducer = (
   }
 };
 
-// get bookings of current user
+// get bookings of current user or all
 export const bookingsReducer = (
-  state: Booking = initBooking,
+  state = { bookings: [] },
   action: AnyAction
 ) => {
   switch (action.type) {
+    case ADMIN_BOOKINGS_REQUEST:
+      return {
+        loading: true,
+      };
     case MY_BOOKINGS_SUCCESS:
+    case ADMIN_BOOKINGS_SUCCESS:
       return {
         loading: false,
         bookings: action.payload,
       };
     case MY_BOOKINGS_FAIL:
+    case ADMIN_BOOKINGS_FAIL:
       return {
         loading: false,
         error: action.payload,
@@ -135,6 +148,42 @@ export const bookingDetailsReducer = (
       return {
         loading: false,
         error: action.payload,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+
+    default:
+      return state;
+  }
+};
+
+// delete booking
+export const bookingReducer = (
+  state: Booking = initBooking,
+  action: AnyAction
+) => {
+  switch (action.type) {
+    case DELETE_BOOKING_REQUEST:
+      return {
+        loading: true,
+      };
+    case DELETE_BOOKING_SUCCESS:
+      return {
+        loading: false,
+        isDeleted: action.payload,
+      };
+    case DELETE_BOOKING_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case DELETE_BOOKING_RESET:
+      return {
+        loading: false,
+        isDeleted: false,
       };
     case CLEAR_ERRORS:
       return {

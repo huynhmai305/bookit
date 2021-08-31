@@ -13,8 +13,9 @@ const BookingDetails: React.FC<BookingDetailsProps> = () => {
   const { booking, error } = useSelector(
     (state: RootState) => state.bookingDetails
   );
+  const { user } = useSelector((state: RootState) => state.loadedUser);
 
-  console.log(booking, 123);
+  const isPaid = booking && booking.paymentInfo.status === "COMPLETED";
 
   useEffect(() => {
     if (error) {
@@ -60,9 +61,18 @@ const BookingDetails: React.FC<BookingDetailsProps> = () => {
               <hr />
 
               <h4 className="my-4">Payment Status</h4>
-              <p className="greenColor">
-                <b>Paid</b>
+              <p className={isPaid ? "greenColor" : "redColor"}>
+                <b>{isPaid ? "Paid" : "Not Paid"}</b>
               </p>
+
+              {user && user.role === "admin" && (
+                <>
+                  <h4 className="my-4">Paypal Payment ID</h4>
+                  <p className="redColor">
+                    <b>{booking.paymentInfo.id}</b>
+                  </p>
+                </>
+              )}
 
               <h4 className="mt-5 mb-4">Booked Room:</h4>
 

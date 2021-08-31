@@ -4,6 +4,7 @@ import catchAsyncErrors from "../middlewares/catchAsyncErrors";
 import Booking from "../models/booking";
 import * as Moment from "moment";
 import { extendMoment } from "moment-range";
+import ErrorHandler from "../utils/errorHandler";
 
 const moment = extendMoment(Moment);
 
@@ -103,6 +104,43 @@ const checkBookedDatesOfRoom = catchAsyncErrors(
   }
 );
 
+// get all bookings - admin => api/admin/bookings
+const allAdminBookings = catchAsyncErrors(
+  async (req: NextApiRequest | any, res: NextApiResponse) => {
+    const bookings = await Booking.find()
+      .populate({
+        path: "room",
+        select: "name pricePerNight images",
+      })
+      .populate({
+        path: "user",
+        select: "name email",
+      });
+
+    res.status(200).json({
+      success: true,
+      bookings,
+    });
+  }
+);
+
+// delete booking - admin => api/admin/bookings
+const deleteBooking = catchAsyncErrors(
+  async (req: NextApiRequest, res: NextApiResponse, next: any) => {
+    const booking = await Booking.findById(req.query.id);
+
+    if (!booking) {
+      return next(new ErrorHandler("Booking not found with this ID", 400));
+    }
+
+    await booking.remove();
+
+    res.status(200).json({
+      success: true,
+    });
+  }
+);
+
 // get all bookings of current user => api/bookings/me
 const myBookings = catchAsyncErrors(
   async (req: NextApiRequest | any, res: NextApiResponse, next: any) => {
@@ -149,4 +187,6 @@ export {
   checkBookedDatesOfRoom,
   myBookings,
   getBookingDetails,
+  allAdminBookings,
+  deleteBooking,
 };
