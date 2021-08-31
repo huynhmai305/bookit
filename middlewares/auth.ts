@@ -15,4 +15,19 @@ const isAuthenticatedUser = catchAsyncErrors(
   }
 );
 
-export { isAuthenticatedUser };
+// Handling user roles
+const authorizeRoles = (...roles: any) => {
+  return (req: any, _res: any, next: any) => {
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new ErrorHandler(
+          `Role (${req.user.role}) is not allowed to access this resource.`,
+          403
+        )
+      );
+    }
+    next();
+  };
+};
+
+export { isAuthenticatedUser, authorizeRoles };

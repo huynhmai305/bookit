@@ -9,7 +9,9 @@ import {
   allRoomsReducer,
   checkReviewReducer,
   newReviewReducer,
+  newRoomReducer,
   roomDetailsReducer,
+  roomReducer,
 } from "./roomReducers";
 import {
   authReducer,
@@ -20,6 +22,8 @@ import {
 
 const reducers = combineReducers({
   allRooms: allRoomsReducer,
+  newRoom: newRoomReducer,
+  room: roomReducer,
   roomDetails: roomDetailsReducer,
   auth: authReducer,
   loadedUser: loadedUserReducer,

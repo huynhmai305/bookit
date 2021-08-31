@@ -5,8 +5,7 @@ import { useRouter } from "next/router";
 import { User } from "../../redux/reducers/userReducers";
 import { RootState } from "../../redux/store";
 import { toast } from "react-toastify";
-import { clearErrors } from "../../redux/actions/roomActions";
-import { registerUser } from "../../redux/actions/userActions";
+import { clearErrors, registerUser } from "../../redux/actions/userActions";
 import ButtonLoader from "../layout/ButtonLoader";
 
 interface RegisterComponentProps {}
@@ -32,6 +31,8 @@ const RegisterComponent: React.FC<RegisterComponentProps> = () => {
 
   const submitHandler = async (e: any) => {
     e.preventDefault();
+
+    if (!avatar) return toast.error("Please upload images.");
 
     const userData = { name, email, password, avatar };
     dispatch(registerUser(userData));
@@ -81,6 +82,7 @@ const RegisterComponent: React.FC<RegisterComponentProps> = () => {
                 name="name"
                 value={name}
                 onChange={onChange}
+                required
               />
             </div>
 
@@ -94,6 +96,7 @@ const RegisterComponent: React.FC<RegisterComponentProps> = () => {
                 name="email"
                 value={email}
                 onChange={onChange}
+                required
               />
             </div>
 
@@ -107,6 +110,7 @@ const RegisterComponent: React.FC<RegisterComponentProps> = () => {
                 name="password"
                 value={password}
                 onChange={onChange}
+                required
               />
             </div>
 
@@ -132,6 +136,7 @@ const RegisterComponent: React.FC<RegisterComponentProps> = () => {
                     id="customFile"
                     accept="images/*"
                     onChange={onChange}
+                    required
                   />
                   <label className="custom-file-label" htmlFor="customFile">
                     Choose Avatar

@@ -12,6 +12,21 @@ import {
   REVIEW_AVAILABILITY_FAIL,
   REVIEW_AVAILABILITY_REQUEST,
   REVIEW_AVAILABILITY_SUCCESS,
+  ADMIN_ROOMS_FAIL,
+  ADMIN_ROOMS_SUCCESS,
+  ADMIN_ROOMS_REQUEST,
+  NEW_ROOM_FAIL,
+  NEW_ROOM_REQUEST,
+  NEW_ROOM_RESET,
+  NEW_ROOM_SUCCESS,
+  UPDATE_ROOM_FAIL,
+  UPDATE_ROOM_REQUEST,
+  UPDATE_ROOM_RESET,
+  UPDATE_ROOM_SUCCESS,
+  DELETE_ROOM_SUCCESS,
+  DELETE_ROOM_FAIL,
+  DELETE_ROOM_REQUEST,
+  DELETE_ROOM_RESET,
 } from "./../constants/roomConstants";
 
 export interface Room {
@@ -50,6 +65,10 @@ export const allRoomsReducer = (
   action: AnyAction
 ) => {
   switch (action.type) {
+    case ADMIN_ROOMS_REQUEST:
+      return {
+        loading: true,
+      };
     case ALL_ROOMS_SUCCESS:
       return {
         roomsCount: action.payload.roomsCount,
@@ -57,7 +76,13 @@ export const allRoomsReducer = (
         filteredRoomsCount: action.payload.filteredRoomsCount,
         rooms: action.payload.rooms,
       };
+    case ADMIN_ROOMS_SUCCESS:
+      return {
+        loading: false,
+        rooms: action.payload,
+      };
     case ALL_ROOMS_FAIL:
+    case ADMIN_ROOMS_FAIL:
       return {
         error: action.payload,
       };
@@ -75,7 +100,7 @@ export const allRoomsReducer = (
 // Room details reducer
 export const roomDetailsReducer = (
   state: Room = initRoomDetails,
-  action: any
+  action: AnyAction
 ) => {
   switch (action.type) {
     case ROOM_DETAILS_SUCCESS:
@@ -98,7 +123,7 @@ export const roomDetailsReducer = (
 };
 
 // New room review reducer
-export const newReviewReducer = (state: Room = {}, action: any) => {
+export const newReviewReducer = (state: Room = {}, action: AnyAction) => {
   switch (action.type) {
     case NEW_REVIEW_REQUEST:
       return {
@@ -129,10 +154,86 @@ export const newReviewReducer = (state: Room = {}, action: any) => {
   }
 };
 
+// New room reducer
+export const newRoomReducer = (state = { room: {} }, action: AnyAction) => {
+  switch (action.type) {
+    case NEW_ROOM_REQUEST:
+      return {
+        loading: true,
+      };
+    case NEW_ROOM_SUCCESS:
+      return {
+        loading: false,
+        success: action.payload.success,
+        room: action.payload.room,
+      };
+    case NEW_ROOM_RESET:
+      return {
+        success: false,
+      };
+    case NEW_ROOM_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+
+    default:
+      return state;
+  }
+};
+
+// Update room reducer
+export const roomReducer = (state = {}, action: AnyAction) => {
+  switch (action.type) {
+    case UPDATE_ROOM_REQUEST:
+    case DELETE_ROOM_REQUEST:
+      return {
+        loading: true,
+      };
+    case UPDATE_ROOM_SUCCESS:
+      return {
+        loading: false,
+        isUpdated: action.payload,
+      };
+    case DELETE_ROOM_SUCCESS:
+      return {
+        loading: false,
+        isDeleted: action.payload,
+      };
+    case UPDATE_ROOM_RESET:
+      return {
+        isUpdated: false,
+      };
+    case DELETE_ROOM_RESET:
+      return {
+        isDeleted: false,
+      };
+    case UPDATE_ROOM_FAIL:
+    case DELETE_ROOM_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
+      };
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null,
+      };
+
+    default:
+      return state;
+  }
+};
+
 // check review availability reducer
 export const checkReviewReducer = (
   state: Room = { reviewAvailability: null },
-  action: any
+  action: AnyAction
 ) => {
   switch (action.type) {
     case REVIEW_AVAILABILITY_REQUEST:
