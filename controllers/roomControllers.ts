@@ -232,6 +232,52 @@ const allAdminRooms = catchAsyncErrors(
   }
 );
 
+// => GET /api/reviews?id=:id
+const getRoomReviews = catchAsyncErrors(
+  async (req: any, res: NextApiResponse) => {
+    const room = await Room.findById(req.query.id);
+
+    res.status(200).json({
+      success: true,
+      reviews: room.reviews,
+    });
+  }
+);
+
+// => DELETE /api/reviews?roomId=:id
+const deleteReviews = catchAsyncErrors(
+  async (req: any, res: NextApiResponse) => {
+    const room = await Room.findById(req.query.roomId);
+
+    const reviews = room.reviews.filter(
+      (review: any) => review._id.toString() !== req.query.id.toString()
+    );
+
+    const numOfReviews = reviews.length;
+    const ratings =
+      room.reviews.reduce((total: any, item: any) => total + item.rating, 0) /
+      numOfReviews;
+
+    await Room.findByIdAndUpdate(
+      req.query.roomId,
+      {
+        reviews,
+        ratings,
+        numOfReviews,
+      },
+      {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false,
+      }
+    );
+
+    res.status(200).json({
+      success: true,
+    });
+  }
+);
+
 export {
   allRooms,
   addRoom,
@@ -241,4 +287,6 @@ export {
   createRoomReview,
   checkReviewAvailability,
   allAdminRooms,
+  getRoomReviews,
+  deleteReviews,
 };

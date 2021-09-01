@@ -6,6 +6,7 @@ import ErrorHandler from "../utils/errorHandler";
 import absoluteUrl from "next-absolute-url";
 import sendEmail from "../utils/sendEmail";
 import crypto from "crypto";
+import { AnyAction } from "redux";
 
 // setting up cloudinary config
 cloudinary.v2.config({
@@ -180,10 +181,84 @@ const resetPassword = catchAsyncErrors(
   }
 );
 
+// Get all users => /api/admin/users
+const allAdminUsers = catchAsyncErrors(
+  async (req: any, res: NextApiResponse) => {
+    const users = await User.find();
+
+    res.status(200).json({
+      success: true,
+      users,
+    });
+  }
+);
+
+// Get user details => /api/admin/users/:id
+const getUserDetails = catchAsyncErrors(
+  async (req: any, res: NextApiResponse, next: any) => {
+    const user = await User.findById(req.query.id);
+
+    if (!user) {
+      return next(new ErrorHandler("User not found with this ID", 400));
+    }
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  }
+);
+
+// Update user details => /api/admin/users/:id
+const updateUser = catchAsyncErrors(
+  async (req: any, res: NextApiResponse, next: any) => {
+    const newUserData = {
+      name: req.body.name,
+      email: req.body.email,
+      role: req.body.role,
+    };
+
+    const user = await User.findByIdAndUpdate(req.query.id, newUserData, {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    });
+
+    res.status(200).json({
+      success: true,
+    });
+  }
+);
+
+// Delete user - admin => /api/admin/users/:id
+const deleteUser = catchAsyncErrors(
+  async (req: any, res: NextApiResponse, next: any) => {
+    const user = await User.findById(req.query.id);
+
+    if (!user) {
+      return next(new ErrorHandler("User not found with this ID", 400));
+    }
+
+    // remove avatar
+    const image_id = user.avatar.public_id;
+    await cloudinary.v2.uploader.destroy(image_id);
+
+    await user.remove();
+
+    res.status(200).json({
+      success: true,
+    });
+  }
+);
+
 export {
   registerUser,
   currentUserProfile,
   updateUserProfile,
   forgotPassword,
   resetPassword,
+  allAdminUsers,
+  getUserDetails,
+  updateUser,
+  deleteUser,
 };
